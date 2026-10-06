@@ -201,14 +201,9 @@ details[open]>summary::before{transform:rotate(45deg)}
 #toast{position:fixed;z-index:40;left:50%;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px);transform:translateX(-50%);width:max-content;max-width:min(520px,calc(100% - 32px));padding:12px 16px;border-radius:var(--r);background:var(--ink);color:var(--bg);font-size:15px;font-weight:600;box-shadow:0 12px 32px rgba(0,0,0,.7)}
 footer{width:100%;max-width:1080px;margin:0 auto;padding:24px var(--pad-r) 32px var(--pad-l);border-top:1px solid var(--line);color:var(--muted);font-size:14px}
 
-/* Meu dia: faixa compacta de La Concha (donostia.svg) junto da saudação, sem hero.
-   Paisagem original, estática e decorativa; o rótulo visível nomeia o lugar.
-   Orçamento em 390x844: o botão da próxima tarefa termina antes de 700px mesmo com título em três linhas. */
+/* Meu dia: saudação curta; a imagem da cidade do dia vive no painel da próxima tarefa (uma imagem por tela).
+   donostia.svg continua como fallback quando o catálogo de cidades ou a foto de Donostia falham. */
 .today-head{display:grid;gap:12px;margin:0 0 4px}
-.donostia{margin:0}
-.donostia img{display:block;width:100%;height:auto;aspect-ratio:480/100;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface)}
-.donostia figcaption{margin-top:6px;color:var(--sub);font-size:13px;font-weight:600;line-height:1.35}
-.donostia figcaption strong{color:var(--ink);font-weight:650}
 .today-greet .sub{margin:6px 0 0;font-size:15px;font-variant-numeric:tabular-nums}
 /* Motivação dentro do painel: uma frase sobre a língua (tinta) e uma prática objetiva (secundária). */
 .nudge{display:grid;gap:4px}
@@ -345,9 +340,7 @@ a.journey-church:hover{color:var(--sub);text-decoration-color:var(--accent)}
  .feedback{padding:28px}
  #task-feedback>.primary{width:auto}
  .next-task{align-items:flex-start;padding:28px}
- .today-head{grid-template-columns:minmax(0,1fr) minmax(300px,440px);align-items:end;column-gap:32px;margin-bottom:12px}
- .today-head .donostia{grid-column:2;grid-row:1}
- .today-greet{grid-column:1;grid-row:1}
+ .today-head{margin-bottom:12px}
  .today-greet .sub{font-size:17px}
  .journey{padding:0 24px 22px}
  .journey-scene{height:38px;margin:0 -24px 16px}
@@ -361,9 +354,7 @@ a.journey-church:hover{color:var(--sub);text-decoration-color:var(--accent)}
 /* Movimento mínimo e acessibilidade */
 @media(prefers-reduced-motion:no-preference){
  button,a,label,.choice{transition:background-color .15s ease,color .15s ease,box-shadow .15s ease,transform .1s ease}
- .skeleton{animation:hb-pulse 1.4s ease-in-out infinite}
 }
-@keyframes hb-pulse{50%{opacity:.45}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 @media(forced-colors:active){
  .primary,.secondary,.choice,.modes button,.timer-toggle,.listen-controls button,.tag,.difficulty,.journey,.journey-pair li{border:1px solid ButtonText}
@@ -379,7 +370,6 @@ button,summary,textarea,input,select,[tabindex]{scroll-margin-block:16px 80px}
 /* Em telas baixas, a ação vem antes da orientação; San Sebastián continua nomeada. */
 @media(max-height:700px) and (max-width:759px){
  .today-head{gap:8px}
- .donostia img{height:44px;aspect-ratio:auto;object-fit:cover;object-position:center bottom}
  .today-greet h1{font-size:24px;line-height:1.2}
  .today-greet .sub{font-size:14px;margin-top:4px}
  .next-task{gap:8px;padding:16px}
@@ -387,3 +377,126 @@ button,summary,textarea,input,select,[tabindex]{scroll-margin-block:16px 80px}
  .next-task .next-status{order:1}
  .next-task .nudge{order:2}
 }
+
+/* Experiência (experience-ui.js): superfície com luz, cidade do dia, evolução dos dois e álbum.
+   Luz estática vinda do canto superior esquerdo, borda clara no topo e à esquerda, profundidade discreta.
+   Sem brilho, sem pulsação; o laranja continua reservado para ação e dado. */
+:root{--lit:linear-gradient(135deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,.015) 34%,rgba(255,255,255,0) 62%);--line-hi:#363636;--lit-edge:inset 1px 1px 0 rgba(255,255,255,.06);--depth:0 1px 0 rgba(0,0,0,.6),0 18px 36px -24px rgba(0,0,0,.95)}
+.card,.journey,.banner,.xp-city,.member-progress,.album-form{border-color:var(--line-hi) var(--line) var(--line) var(--line-hi);background-image:var(--lit);box-shadow:var(--lit-edge),var(--depth)}
+.next-task{background-image:var(--lit);box-shadow:var(--lit-edge),var(--depth)}
+.feedback{background-image:var(--lit);box-shadow:inset 0 3px 0 var(--accent),var(--depth)}
+
+/* Ambientação no painel da próxima tarefa: foto com contraste e fade para o fundo do painel; o rótulo fica fora da imagem. */
+.next-task{--np:20px;--ph:112px;padding:var(--np);overflow:hidden}
+.lesson-photo{align-self:stretch;margin:calc(-1 * var(--np)) calc(-1 * var(--np)) 0;min-height:calc(var(--ph) + 26px)}
+.lesson-photo img{display:block;width:100%;height:var(--ph);object-fit:cover;object-position:center 60%;background:var(--surface);filter:saturate(.9) brightness(.82) contrast(1.08);-webkit-mask-image:linear-gradient(to bottom,#000 52%,transparent);mask-image:linear-gradient(to bottom,#000 52%,transparent)}
+.lesson-photo[data-kind=illustration] img{object-position:center bottom;filter:none}
+.lesson-photo-label{display:block;margin:2px var(--np) 0;color:var(--sub);font-size:13px;font-weight:600;line-height:1.4}
+.lesson-photo[data-state=loading]{background:linear-gradient(to bottom,var(--surface) 0,var(--surface) var(--ph),transparent var(--ph))}
+.lesson-photo[data-state=empty]{display:none}
+
+/* Cidade do dia: hora local, tempo estimado e uma curiosidade em espanhol. */
+.xp-city{margin:0 0 16px;padding:18px 20px 12px;border:1px solid var(--line);border-radius:var(--r-lg);background-color:var(--surface)}
+.xp-city-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px}
+.xp-city-head h2{font-size:20px}
+.xp-city-head .tag{background:var(--accent-soft);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent-line)}
+.city-now{display:grid;grid-template-columns:repeat(auto-fit,minmax(136px,1fr));gap:12px 16px;margin:14px 0 4px}
+.city-now dt{color:var(--muted);font-size:13px;font-weight:650;line-height:1.4}
+.city-now dd{margin:2px 0 0;color:var(--ink);font-size:16px;font-weight:600;line-height:1.4}
+.city-now dd:first-letter{text-transform:uppercase}
+.city-now dd.sub{color:var(--sub);font-weight:400}
+.weather-temp{font-variant-numeric:tabular-nums}
+.weather-meta{display:block;margin-top:2px;color:var(--sub);font-size:13px;font-weight:400}
+.city-facts-title{margin:16px 0 4px;color:var(--sub);font-size:14px;font-weight:650;letter-spacing:0}
+.city-fact{padding:8px 0}
+.city-fact+.city-fact{border-top:1px solid var(--line)}
+.city-fact strong{display:block;font-size:16px}
+.city-fact p{margin:4px 0 0;color:var(--ink);font-size:16px;line-height:1.55}
+.city-fact a,.credits a{display:inline-flex;align-items:center;min-height:44px;font-size:14px;font-weight:600}
+.city-more{margin:4px 0 0}
+.city-ref-line{margin:8px 0;font-size:15px}
+.photo-credit{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+.xp-skel-line{display:block;width:60%;height:20px;margin-top:6px}
+
+/* Evolução: os dois perfis lado a lado, cada um na própria escala, sem ranking. */
+.xp-section-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px;margin:32px 0 12px}
+.xp-section-head h2:focus{outline:none}
+.xp-section-head h2:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.xp-updated{font-size:13px;font-variant-numeric:tabular-nums}
+.shared-intro{margin:-4px 0 12px;font-size:14px}
+.shared-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.member-progress{padding:18px 18px 14px;border:1px solid var(--line);border-radius:var(--r-lg);background-color:var(--surface)}
+.member-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px}
+.member-head .sub{font-size:14px;font-weight:400;font-variant-numeric:tabular-nums}
+.chart-title{margin:16px 0 6px;color:var(--sub);font-size:14px;font-weight:650;line-height:1.3}
+.skill-bars{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.skill-bars li{display:grid;grid-template-columns:72px minmax(0,1fr) 3ch;align-items:center;gap:10px;font-size:14px}
+.skill-label{color:var(--sub)}
+.skill-bar{display:block;height:10px}
+.skill-bar i{display:block;height:100%;border-radius:0 4px 4px 0;background:var(--accent)}
+.skill-count{color:var(--ink);font-weight:650;text-align:right;font-variant-numeric:tabular-nums}
+.day-chart{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));align-items:end;gap:2px;height:72px;border-bottom:1px solid var(--line-strong)}
+.day-col{display:flex;align-items:flex-end;height:100%}
+.day-col i{display:block;width:100%;border-radius:4px 4px 0 0;background:var(--accent)}
+.day-col i[data-zero=true]{height:0}
+.day-axis{display:flex;justify-content:space-between;margin-top:4px;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.member-rhythm{margin:14px 0 0;color:var(--ink);font-size:15px}
+.member-rhythm .sub{display:block;font-size:14px}
+.xp-skel-card{height:240px;border-radius:var(--r-lg)}
+
+/* Álbum a dois: formulário estável (não repinta na atualização) e grade de fotos. */
+.album-form{display:grid;gap:8px;padding:18px;border:1px solid var(--line);border-radius:var(--r-lg);background-color:var(--surface)}
+.album-form label{margin-top:6px;color:var(--ink);font-size:15px;font-weight:600}
+.album-pick .secondary{width:100%}
+.album-help{margin:8px 0 0;font-size:14px}
+.album-caption{min-height:96px;font-size:16px;line-height:1.55}
+.album-meta{display:flex;justify-content:flex-end;font-size:13px;font-variant-numeric:tabular-nums}
+.album-meta .sub{font-size:13px}
+.album-preview{margin:4px 0 0}
+.album-preview img{display:block;width:100%;max-height:260px;object-fit:contain;border-radius:var(--r);background:var(--surface-2)}
+.album-preview figcaption{margin-top:6px;font-size:13px}
+.album-status{margin:4px 0 0;color:var(--sub);font-size:14px}
+.album-status:empty{display:none}
+.album-status.error{color:var(--danger)}
+.album-form .primary{width:100%;margin-top:4px}
+[data-xp-album-list]{margin-top:16px}
+[data-xp-album-list]>.xp-updated{display:block;margin-bottom:8px}
+.album-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.album-item{margin:0}
+.album-item a{display:block;border-radius:var(--r)}
+.album-item img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r);background:var(--surface-2)}
+.album-item figcaption{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-top:6px}
+.album-item figcaption p{flex-basis:100%;margin:0;color:var(--ink);font-size:15px;line-height:1.45}
+.album-item figcaption .sub{font-size:13px}
+.album-target{min-height:22px;font-size:12px}
+.xp-skel-photo{aspect-ratio:4/3;border-radius:var(--r)}
+
+/* Histórico próprio recolhido abaixo da evolução compartilhada; créditos em Referências. */
+.own-history{margin-top:32px;border-top:1px solid var(--line)}
+.own-history>summary{flex-wrap:wrap;font-size:17px}
+.own-history>summary .sub{font-weight:400;font-size:14px}
+.own-history-head{margin:4px 0 4px}
+.credits{margin:0;padding:0;list-style:none}
+.credits li{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 12px;padding:10px 0;border-top:1px solid var(--line)}
+.credits li strong{flex-basis:100%}
+.credits li .sub{font-size:14px}
+
+@media(min-width:720px){.shared-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.album-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.album-pick .secondary,.album-form .primary{width:auto;justify-self:start}}
+@media(min-width:760px){.next-task{--np:28px;--ph:150px}.xp-city{padding:22px 24px 14px}.album-form{padding:22px 24px}}
+@media(max-height:700px) and (max-width:759px){.next-task{--np:16px;--ph:64px}}
+
+/* Entrada única dos slots: opacidade + deslocamento curto, 180 ms. Movimento reduzido: nenhuma animação. */
+@media(prefers-reduced-motion:no-preference){.xp-enter{animation:xp-in .18s cubic-bezier(.2,.7,.2,1) both}}
+@keyframes xp-in{from{opacity:0;transform:translateY(4px)}}
+@media(prefers-reduced-motion:reduce){.xp-enter{animation:none!important}}
+@media(forced-colors:active){
+ .card,.journey,.banner,.next-task,.feedback,.xp-city,.member-progress,.album-form{background-image:none;box-shadow:none}
+ .lesson-photo img{filter:none;-webkit-mask-image:none;mask-image:none;border-bottom:1px solid CanvasText}
+ .album-item img,.album-preview img{border:1px solid CanvasText}
+ .skill-bar i,.day-col i{forced-color-adjust:none;background:CanvasText}
+ .day-chart{border-bottom-color:CanvasText}
+}
+
+/* Créditos culturais também precisam funcionar com o polegar. */
+.photo-credit a,.city-ref-line a{display:inline-flex;align-items:center;min-height:44px;margin-right:8px}
+[data-xp-album-updated]{display:block;margin-top:12px}

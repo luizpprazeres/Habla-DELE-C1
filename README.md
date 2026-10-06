@@ -39,3 +39,17 @@ A versão 0.3.0 reconhece a primeira resposta, a prática de habilidades diferen
 San Sebastián/Donostia, Bilbao e Santiago de Compostela aparecem como referências culturais, com hospitais e catedrais em páginas institucionais. As referências não interferem nos exercícios. Metodologia em [docs/JORNADA.md](docs/JORNADA.md) e fontes em [docs/REFERENCIAS-CIDADES.md](docs/REFERENCIAS-CIDADES.md).
 
 Na versão 0.3.1, o Meu dia abre com uma ilustração original de La Concha. Mensagens autorais combinam humor discreto com uma ação de estudo, escolhidas por habilidade, rascunho ou revisão. A seleção varia por dia e perfil, sem custo adicional de IA; não constitui feedback nem medida de nível. Critérios em [docs/MOTIVACAO.md](docs/MOTIVACAO.md).
+
+## Experiência 0.4.0: Espanha e trajetória compartilhada
+
+O Meu dia recebe fotografia real licenciada no card do próximo treino, com fade e contraste via CSS. A cidade do dia alterna Donostia, Palma, Barcelona, Madrid, Bilbao e Santiago; San Sebastián aparece três vezes num ciclo de oito dias. O dia é comum aos dois perfis (Maceió); relógio local usa Europe/Madrid com horário de verão. Curiosidades curtas em espanhol, igrejas e hospitais têm fontes institucionais. Fotos são arquivos locais otimizados, com autor, título, licença, origem e adaptações nos créditos de Referências. Consulte `docs/ESPANHA.md`.
+
+O clima vem da API pública Open-Meteo através do Worker: apenas coordenadas de cidades, sem dados dos alunos. É estimativa de modelo, com hora do dado; falhas aparecem como indisponível. Cache meteorológico de dez minutos; atualização no dashboard aberto e visível em intervalos de dez minutos. Esse uso pessoal sem monetização segue a modalidade gratuita; mudança de finalidade exige revisar os termos do serviço.
+
+Evolução reúne os dois perfis: totais por habilidade no histórico completo e atividade diária dos últimos 14 dias, dias praticados na semana e os marcos cooperativos. Não há ranking nem penalidade por pausas. Evolução, álbum e marcos atualizam a cada minuto com a página visível e ao voltar à janela, preservando o formulário. Contagens são prática registrada, não estimativas de nível.
+
+O álbum compartilhado permite escolher uma foto, visualizar, escrever legenda e publicar para ambos ou como incentivo ao parceiro. Compressão local para JPEG de até 1600 px e 600 KB descarta EXIF/localização. O servidor aceita JPEG/PNG/WebP de até 700 KB, valida assinatura e aplica atomicamente 80 fotos/25 MB para o casal. As imagens ficam em D1 e só são entregues pela API com o acesso compartilhado; não são assets públicos. Não há exclusão ou edição de fotos nesta versão. Legenda/destinatário ficam na sessão do navegador; pixels e prévia ficam só na aba aberta até o envio. A exportação inclui metadados e links, não os binários; abra a foto para salvá-la. Falha com confirmação incerta preserva o envio, bloqueia alterações e consulta o id no álbum antes de repetir, sem criar duplicata. Consulte `docs/EXPERIENCE-API.md` e `docs/EXPERIENCE-UI.md`.
+
+A luz dos blocos é estática e discreta. As entradas usam apenas opacidade e 4 px em 180 ms, respeitando movimento reduzido. Não há parallax, confete, pulsação ou carrossel automático.
+
+Recuperação após recarga: UUID/estado pendente também ficam na sessão. O álbum confere o envio; se não estiver confirmado, pede escolher novamente a mesma foto e mantém o UUID. Não armazena pixels no sessionStorage.

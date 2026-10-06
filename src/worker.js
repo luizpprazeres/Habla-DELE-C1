@@ -1,5 +1,8 @@
 import {blindSolvePrompt,assertBlindSolve,buildBlueprint,validateBlueprintTask,qualityReviewSchema,assertQualityReview,shuffleQuestionOptions,qualityReviewPrompt,sanitizeTaskPayload} from './c1.js';
 import {loadJourney,celebrate,JourneyError} from './journey.js';
+import {experienceRoute,exportPhotos} from './experience.js';
+import {SPAIN_CITIES,cityForDay} from '../public/spain-cities.js';
+const SPAIN_CATALOG={cities:SPAIN_CITIES,cityForDay};
 const KINDS = ['reading', 'listening', 'writing', 'speaking'];
 export class AppError extends Error { constructor(message, status = 400) { super(message); this.status = status; } }
 const json = (body, status = 200, extra = {}) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...extra } });
@@ -110,6 +113,7 @@ async function routes(request,env) {
  }
  if (path === '/api/journey' && method === 'GET') return json(await loadJourney(env.DB,validateProfile(url.searchParams.get('profile'))));
  if (path === '/api/journey/celebrate' && method === 'POST') { const result=await celebrate(env.DB,await body(request)); return json(result,result.created?201:200); }
+ const experience=await experienceRoute(request,env,SPAIN_CATALOG); if(experience) return experience;
  if (path === '/api/tasks' && method === 'POST') {
   const input=await body(request), id=validateProfile(input.profile);
   if (!KINDS.includes(input.kind)) throw new AppError('Tipo de tarefa inválido.');
@@ -226,7 +230,9 @@ async function routes(request,env) {
   const attempts=(await env.DB.prepare('SELECT * FROM attempts').all()).results;
   // Antes da migração 0005 a tabela não existe; a exportação dos estudos não pode falhar por isso.
   const celebrations=(await env.DB.prepare('SELECT * FROM journey_celebrations ORDER BY created_at').all().catch(()=>({results:[]}))).results || [];
-  return json({exportedAt:new Date().toISOString(),profiles,tasks:tasks.map(safeTask),attempts,celebrations,audioNotice:'Os áudios não estão incluídos neste arquivo; use o player de cada tentativa para baixá-los.'});
+  // Fotos: só metadados e links; antes da migração 0006 a lista fica vazia.
+  const photos=await exportPhotos(env.DB);
+  return json({exportedAt:new Date().toISOString(),profiles,tasks:tasks.map(safeTask),attempts,celebrations,photos,audioNotice:'Os áudios não estão incluídos neste arquivo; use o player de cada tentativa para baixá-los.',photoNotice:'As fotos não estão incluídas neste arquivo; abra cada url com o acesso compartilhado para baixá-las.'});
  }
  throw new AppError('Página não encontrada.',404);
 }
