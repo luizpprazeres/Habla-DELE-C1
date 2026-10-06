@@ -201,6 +201,20 @@ details[open]>summary::before{transform:rotate(45deg)}
 #toast{position:fixed;z-index:40;left:50%;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px);transform:translateX(-50%);width:max-content;max-width:min(520px,calc(100% - 32px));padding:12px 16px;border-radius:var(--r);background:var(--ink);color:var(--bg);font-size:15px;font-weight:600;box-shadow:0 12px 32px rgba(0,0,0,.7)}
 footer{width:100%;max-width:1080px;margin:0 auto;padding:24px var(--pad-r) 32px var(--pad-l);border-top:1px solid var(--line);color:var(--muted);font-size:14px}
 
+/* Meu dia: faixa compacta de La Concha (donostia.svg) junto da saudação, sem hero.
+   Paisagem original, estática e decorativa; o rótulo visível nomeia o lugar.
+   Orçamento em 390x844: o botão da próxima tarefa termina antes de 700px mesmo com título em três linhas. */
+.today-head{display:grid;gap:12px;margin:0 0 4px}
+.donostia{margin:0}
+.donostia img{display:block;width:100%;height:auto;aspect-ratio:480/100;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface)}
+.donostia figcaption{margin-top:6px;color:var(--sub);font-size:13px;font-weight:600;line-height:1.35}
+.donostia figcaption strong{color:var(--ink);font-weight:650}
+.today-greet .sub{margin:6px 0 0;font-size:15px;font-variant-numeric:tabular-nums}
+/* Motivação dentro do painel: uma frase sobre a língua (tinta) e uma prática objetiva (secundária). */
+.nudge{display:grid;gap:4px}
+.nudge-line{color:var(--ink);font-size:16px;font-weight:500;line-height:1.45}
+.nudge-action{color:var(--sub);font-size:15px;line-height:1.5}
+
 /* Utilitários prontos para o app.js
    .next-task: painel da próxima tarefa (um por tela).
    .study-timer (ou .timer-box) + .timer-toggle; pausado: data-state="paused" no .timer ou no wrapper.
@@ -331,6 +345,10 @@ a.journey-church:hover{color:var(--sub);text-decoration-color:var(--accent)}
  .feedback{padding:28px}
  #task-feedback>.primary{width:auto}
  .next-task{align-items:flex-start;padding:28px}
+ .today-head{grid-template-columns:minmax(0,1fr) minmax(300px,440px);align-items:end;column-gap:32px;margin-bottom:12px}
+ .today-head .donostia{grid-column:2;grid-row:1}
+ .today-greet{grid-column:1;grid-row:1}
+ .today-greet .sub{font-size:17px}
  .journey{padding:0 24px 22px}
  .journey-scene{height:38px;margin:0 -24px 16px}
  .journey>.journey-scene{height:52px;background-size:auto 48px,auto,auto,auto,auto}
@@ -357,3 +375,15 @@ a.journey-church:hover{color:var(--sub);text-decoration-color:var(--accent)}
 /* Espaço para focar e rolar controles acima da navegação fixa. */
 html{scroll-padding-block:16px calc(80px + env(safe-area-inset-bottom))}
 button,summary,textarea,input,select,[tabindex]{scroll-margin-block:16px 80px}
+
+/* Em telas baixas, a ação vem antes da orientação; San Sebastián continua nomeada. */
+@media(max-height:700px) and (max-width:759px){
+ .today-head{gap:8px}
+ .donostia img{height:44px;aspect-ratio:auto;object-fit:cover;object-position:center bottom}
+ .today-greet h1{font-size:24px;line-height:1.2}
+ .today-greet .sub{font-size:14px;margin-top:4px}
+ .next-task{gap:8px;padding:16px}
+ .next-task h2{font-size:20px;line-height:1.2}
+ .next-task .next-status{order:1}
+ .next-task .nudge{order:2}
+}

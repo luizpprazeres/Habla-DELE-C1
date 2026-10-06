@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 100" width="480" height="100" role="img" aria-labelledby="t">
+<title id="t">La Concha, San Sebastián / Donostia: a ilha de Santa Clara entre os montes Igueldo e Urgull, vista da balaustrada do passeio</title>
+<!-- Paisagem original e esquemática, desenhada à mão para o Habla. Não reproduz fotografia nem traçado de terceiros.
+     Ponto de vista: o Paseo de La Concha olhando para o mar (norte). Igueldo à esquerda (pôr do sol), Urgull à direita,
+     Santa Clara ao centro, praia em arco e a grade do passeio, símbolos indicados pela prefeitura de Donostia.
+     A Catedral del Buen Pastor fica atrás de quem olha nesta vista e por isso não aparece. -->
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0a0a"/><stop offset="1" stop-color="#1a0e06"/></linearGradient>
+ <radialGradient id="sun" cx="80" cy="52" r="130" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ff7a1a" stop-opacity=".34"/><stop offset=".5" stop-color="#ff7a1a" stop-opacity=".08"/><stop offset="1" stop-color="#ff7a1a" stop-opacity="0"/></radialGradient>
+ <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1714"/><stop offset="1" stop-color="#0c0c0c"/></linearGradient>
+ <radialGradient id="lamp" cx="404" cy="38" r="10" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ff7a1a" stop-opacity=".32"/><stop offset="1" stop-color="#ff7a1a" stop-opacity="0"/></radialGradient>
+ <pattern id="grade" x="0" y="84.6" width="9.6" height="12.4" patternUnits="userSpaceOnUse"><circle cx="4.8" cy="6.2" r="4.1" fill="none" stroke="#cbc5bb" stroke-width="1"/><circle cx="4.8" cy="6.2" r="1.1" fill="#cbc5bb"/><path d="M0 1.2v1.6M0 9.6v1.6" stroke="#cbc5bb" stroke-width="1"/></pattern>
+</defs>
+<rect width="480" height="100" fill="url(#sky)"/>
+<rect width="480" height="100" fill="url(#sun)"/>
+<rect y="54" width="480" height="46" fill="url(#sea)"/>
+<g fill="none" stroke="#ff7a1a" stroke-linecap="round" stroke-opacity=".38" stroke-width="1"><path d="M70 63h48M86 67h26M62 71h30M104 71h12M78 75h22"/></g>
+<!-- Igueldo, com o torreão no alto -->
+<path d="M0 26C14 24 30 22 44 23C62 24 78 30 96 40C112 49 128 55 150 59V62H0Z" fill="#2a2724"/>
+<path d="M40 23v-7h1.4v-1.5h1.4v1.5h1.4v-1.5h1.4v1.5h1.4V23Z" fill="#2a2724"/>
+<path d="M0 26C14 24 30 22 44 23C62 24 78 30 96 40C112 49 128 55 150 59" fill="none" stroke="#ff7a1a" stroke-opacity=".72" stroke-width="1.2"/>
+<!-- Santa Clara e seu pequeno farol -->
+<path d="M204 61C210 58 214 52 222 47C230 42.5 240 41.5 250 42.5C258 43.5 264 48 268 53C271 57 274 59.5 278 61Z" fill="#2a2724"/>
+<path d="M204 61C210 58 214 52 222 47C230 42.5 240 41.5 250 42.5C258 43.5 264 48 268 53C271 57 274 59.5 278 61" fill="none" stroke="#ff7a1a" stroke-opacity=".72" stroke-width="1.2"/>
+<rect x="246" y="36.6" width="3" height="6.4" fill="#2b2926"/>
+<circle cx="247.5" cy="35.7" r="1.3" fill="#ff7a1a"/>
+<path d="M208 62.4h66" stroke="#ff7a1a" stroke-opacity=".18" stroke-width=".8"/>
+<!-- Parte Vieja ao pé do Urgull -->
+<path d="M328 64v-4h6v-3h5v2h6v-4h5v3h7v-2h6v3h7v5Z" fill="#24221f"/>
+<!-- Urgull, com a muralha do castelo no topo -->
+<path d="M480 40C464 37 452 33 438 33C420 33 404 40 390 49C378 56 364 59 350 61V64H480Z" fill="#2a2724"/>
+<path d="M427 34v-4.4h1.8v-1.6h1.8v1.6h1.8v-1.6h1.8v1.6h1.8v-4.2h1.6v-1.4h1.6v1.4h1.6v4.2h1.8v-1.6h1.8v1.6h1.8V34Z" fill="#2a2724"/>
+<path d="M480 40C464 37 452 33 438 33C420 33 404 40 390 49C378 56 364 59 350 61" fill="none" stroke="#ff7a1a" stroke-opacity=".65" stroke-width="1.2"/>
+<!-- Praia em arco -->
+<path d="M0 63Q240 88 480 63V100H0Z" fill="#3d3830"/>
+<path d="M0 63Q240 88 480 63" fill="none" stroke="#a39d92" stroke-opacity=".6" stroke-width=".8"/>
+<!-- Farol do passeio -->
+<circle cx="404" cy="38" r="10" fill="url(#lamp)"/>
+<path d="M404 96V42.4" stroke="#cbc5bb" stroke-width="1.3"/>
+<path d="M401.4 43h5.2" stroke="#cbc5bb" stroke-width="1.2" stroke-linecap="round"/>
+<circle cx="404" cy="38.6" r="3" fill="#ff7a1a" stroke="#cbc5bb" stroke-width=".8"/>
+<!-- Balaustrada do passeio, estilizada -->
+<rect y="82" width="480" height="2.6" fill="#cbc5bb"/>
+<rect y="84.6" width="480" height="12.4" fill="url(#grade)"/>
+<rect y="97" width="480" height="3" fill="#cbc5bb"/>
+<path d="M401.6 100v-5.4l1.2-1.6h2.4l1.2 1.6v5.4Z" fill="#cbc5bb"/>
+</svg>
