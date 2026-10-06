@@ -386,14 +386,20 @@ button,summary,textarea,input,select,[tabindex]{scroll-margin-block:16px 80px}
 .next-task{background-image:var(--lit);box-shadow:var(--lit-edge),var(--depth)}
 .feedback{background-image:var(--lit);box-shadow:inset 0 3px 0 var(--accent),var(--depth)}
 
-/* Ambientação no painel da próxima tarefa: foto com contraste e fade para o fundo do painel; o rótulo fica fora da imagem. */
-.next-task{--np:20px;--ph:112px;padding:var(--np);overflow:hidden}
-.lesson-photo{align-self:stretch;margin:calc(-1 * var(--np)) calc(-1 * var(--np)) 0;min-height:calc(var(--ph) + 26px)}
-.lesson-photo img{display:block;width:100%;height:var(--ph);object-fit:cover;object-position:center 60%;background:var(--surface);filter:saturate(1) brightness(.98) contrast(1.06);-webkit-mask-image:linear-gradient(to bottom,#000 62%,rgba(0,0,0,.82) 78%,rgba(0,0,0,.35) 92%,transparent 100%);mask-image:linear-gradient(to bottom,#000 62%,rgba(0,0,0,.82) 78%,rgba(0,0,0,.35) 92%,transparent 100%)}
-.lesson-photo[data-kind=illustration] img{object-position:center bottom;filter:none}
-.lesson-photo-label{display:block;margin:2px var(--np) 0;color:var(--sub);font-size:13px;font-weight:600;line-height:1.4}
-.lesson-photo[data-state=loading]{background:linear-gradient(to bottom,var(--surface) 0,var(--surface) var(--ph),transparent var(--ph))}
+/* Próximo treino como destaque cinematográfico: foto ocupa o card inteiro.
+   A sombra fica sob o conteúdo; a paisagem permanece viva no lado direito. */
+.next-task{position:relative;isolation:isolate;--np:20px;padding:132px var(--np) 24px;overflow:hidden;background-color:#10100e;min-height:380px}
+.next-task>:not(.lesson-photo){position:relative;z-index:1}
+.next-task h2,.next-task .nudge,.next-task .next-status{text-shadow:0 1px 12px rgba(0,0,0,.55)}
+.next-task .sub,.next-task .nudge-action{color:#dedbd4}
+.lesson-photo{position:absolute;inset:0;margin:0;min-height:0;pointer-events:none;z-index:0}
+.lesson-photo img{display:block;position:absolute;width:100%;height:140%;top:-30%;object-fit:cover;object-position:60% center;filter:saturate(1.04) contrast(1.06)}
+.lesson-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,5,.04) 0%,rgba(5,5,5,.12) 20%,rgba(5,5,5,.78) 45%,rgba(5,5,5,.94) 100%)}
+.lesson-photo[data-kind=illustration] img{filter:none}
+.lesson-photo-label{position:absolute;top:20px;left:var(--np);right:var(--np);z-index:1;display:block;color:#fff;font-size:13px;font-weight:600;line-height:1.4;text-shadow:0 1px 8px #000;background:rgba(5,5,5,.64);padding:6px 10px;border-radius:6px;right:auto;max-width:calc(100% - var(--np) * 2)}
+.lesson-photo[data-state=loading]{background:var(--surface)}
 .lesson-photo[data-state=empty]{display:none}
+.next-task:has(.lesson-photo[data-state=empty]){padding-top:var(--np);min-height:0}
 
 /* Cidade do dia: hora local, tempo estimado e uma curiosidade em espanhol. */
 .xp-city{margin:0 0 16px;padding:18px 20px 12px;border:1px solid var(--line);border-radius:var(--r-lg);background-color:var(--surface)}
@@ -482,8 +488,15 @@ button,summary,textarea,input,select,[tabindex]{scroll-margin-block:16px 80px}
 .credits li .sub{font-size:14px}
 
 @media(min-width:720px){.shared-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.album-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.album-pick .secondary,.album-form .primary{width:auto;justify-self:start}}
-@media(min-width:760px){.next-task{--np:28px;--ph:150px}.xp-city{padding:22px 24px 14px}.album-form{padding:22px 24px}}
-@media(max-height:700px) and (max-width:759px){.next-task{--np:16px;--ph:64px}}
+@media(min-width:760px){
+ .next-task{--np:32px;padding:76px var(--np) 32px;min-height:360px;justify-content:center}
+ .next-task>:not(.lesson-photo){max-width:56%}
+ .next-task h2{font-size:clamp(28px,3.2vw,38px);line-height:1.15}
+ .lesson-photo img{height:100%;top:0;object-position:center 55%}
+ .lesson-photo::after{background:linear-gradient(90deg,rgba(5,5,5,.93) 0%,rgba(5,5,5,.85) 32%,rgba(5,5,5,.70) 54%,rgba(5,5,5,.18) 72%,rgba(5,5,5,.03) 88%),linear-gradient(0deg,rgba(5,5,5,.45),transparent 55%)}
+ .lesson-photo-label{top:24px}
+ .xp-city{padding:22px 24px 14px}.album-form{padding:22px 24px}}
+@media(max-height:700px) and (max-width:759px){.next-task{--np:16px;padding:84px var(--np) 20px;min-height:0}.lesson-photo-label{top:16px}.lesson-photo::after{background:linear-gradient(180deg,rgba(5,5,5,.05),rgba(5,5,5,.72) 32%,rgba(5,5,5,.94) 70%)}}
 
 /* Entrada única dos slots: opacidade + deslocamento curto, 180 ms. Movimento reduzido: nenhuma animação. */
 @media(prefers-reduced-motion:no-preference){.xp-enter{animation:xp-in .18s cubic-bezier(.2,.7,.2,1) both}}
@@ -491,7 +504,7 @@ button,summary,textarea,input,select,[tabindex]{scroll-margin-block:16px 80px}
 @media(prefers-reduced-motion:reduce){.xp-enter{animation:none!important}}
 @media(forced-colors:active){
  .card,.journey,.banner,.next-task,.feedback,.xp-city,.member-progress,.album-form{background-image:none;box-shadow:none}
- .lesson-photo img{filter:none;-webkit-mask-image:none;mask-image:none;border-bottom:1px solid CanvasText}
+ .lesson-photo{display:none}.next-task{padding-top:var(--np);min-height:0}.next-task>:not(.lesson-photo){max-width:100%}
  .album-item img,.album-preview img{border:1px solid CanvasText}
  .skill-bar i,.day-col i{forced-color-adjust:none;background:CanvasText}
  .day-chart{border-bottom-color:CanvasText}
