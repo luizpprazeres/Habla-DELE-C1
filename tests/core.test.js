@@ -14,3 +14,9 @@ test('reading API preserves the text while hiding correction fields',()=>{const 
 test('export cannot bypass protection of pending answer keys or oral sources',async()=>{const rows=[{id:'reading',kind:'reading',payload:JSON.stringify(task)},{id:'writing',kind:'writing',payload:JSON.stringify({...task,sourceMode:'audio'})}];const DB={prepare(sql){return {async all(){return {results:sql.includes('FROM tasks')?rows:[]};}};}};const r=await worker.fetch(new Request('https://habla.test/api/export'),{LOCAL_DEV:'true',DB});assert.equal(r.status,200);const d=await r.json();assert.equal(d.tasks[0].payload.questions[0].correctIndex,undefined);assert.equal(d.tasks[1].payload.source,'');});
 
 test('repair keeps multiline stimulus on server without putting newlines in strict enum literals',()=>{const schema={properties:{source:{type:'string'},title:{type:'string'}}};const original='Primer párrafo.\n\nSegundo párrafo.';const repair=sourceRepair(schema,original);assert.deepEqual(repair.schema.properties.source.enum,['']);assert.equal(repair.restore({source:'',title:'Texto'}).source,original);assert.equal(schema.properties.source.enum,undefined);assert.equal(sourceRepair(schema,null).schema,schema);});
+
+test('dashboard counts complete history even when the displayed list is capped',async()=>{
+ const DB={prepare(sql){return {bind(){return this;},async all(){return {results:[]};},async first(){return sql.includes('COUNT(DISTINCT')?{attempts:150,skills:4}:{calls:0};}};}};
+ const response=await worker.fetch(new Request('https://habla.test/api/dashboard?profile=luiz'),{LOCAL_DEV:'true',DB});
+ assert.equal(response.status,200);const data=await response.json();assert.deepEqual(data.stats,{attempts:150,skills:4});assert.equal(data.attempts.length,0);
+});

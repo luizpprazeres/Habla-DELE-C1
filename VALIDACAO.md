@@ -27,3 +27,17 @@ Após a publicação, chamadas reais em produção geraram com sucesso escrita f
 A API recusou acesso sem a chave compartilhada (401) e escrita de outra origem (403). Os painéis dos dois perfis responderam normalmente; tarefas pendentes também ocultaram gabaritos na exportação. O limite diário compartilhado permaneceu em 40 chamadas.
 
 As fontes oficiais consultadas estão em `docs/REFERENCIAS-C1.md`. Os limites da metodologia e da revisão automática estão em `docs/PEDAGOGIA.md`. O trabalho dos terminais Claude Code Opus 5.5 e a crítica estão resumidos em `docs/DESIGN-REVIEW.md`.
+
+## Atualização 0.3.0 — jornada cooperativa e mobile
+
+Em 06/10/2026, 56 testes passaram: preservam os testes anteriores e acrescentam regras da jornada, semana em Maceió, deduplicação, vínculos de revisão e diálogo, idempotência de reconhecimento, acesso e origem, ausência de textos privados no painel e construção do rascunho de reescrita/seguimento. A verificação de sintaxe e o dry run de publicação também passaram. Reenviar o mesmo texto não conta como reescrita.
+
+A migração 0005 foi aplicada no D1 local. Testes HTTP reais locais confirmaram os dois perfis, objetivo cooperativo completo com dados sintéticos, reconhecimento persistente e único, rejeição de alvo próprio, marco não conquistado e mensagem inválida. Os dados sintéticos foram inseridos somente no banco local. Foi criado backup privado do D1 remoto antes da mudança.
+
+A inspeção central via navegador Chrome conferiu Meu dia, Evolução e Referências em 320, 390, 430 e 1280 px sem rolagem horizontal e com controles de pelo menos 44 px de altura. O rascunho escrito permaneceu após recarga; a fonte de mediação oral continuou oculta. Uma celebração local foi confirmada na interface e no banco. A seleção de perfis preserva o perfil atual caso a busca falhe; a navegação do treino continua independente de uma falha da jornada.
+
+Foram adicionados tratamento de armazenamento indisponível, proteção de navegação durante operações, acesso por teclado ao envio de áudio e recuperação de correção pendente. A barra móvel é ocultada enquanto se digita; o posicionamento usa visualViewport quando disponível. Essa implementação não equivale a um teste com teclado virtual, Safari ou microfone em aparelhos físicos; essas verificações continuam pendentes nos celulares de Luiz e Alana.
+
+Os terminais Claude Code usaram Opus 5.5, confirmado nos resultados de modelo, para backend, design, polimento das igrejas e crítica independente com a skill critique. A direção visual usa design-taste-frontend. As referências de cidades, hospitais e igrejas estão em docs/REFERENCIAS-CIDADES.md; a torre gótica é ilustração original esquemática, sem logotipos ou alegação de reprodução arquitetônica fiel.
+
+A crítica com Claude Opus 5.5 levou à simplificação do Meu dia, à retirada de volumes comparativos entre o casal e à correção dos vínculos de reescrita no histórico e na edição direta. O contador de progresso consulta todo o histórico. Rascunhos idênticos a respostas já enviadas não tomam o atalho da próxima atividade. Campos ficam bloqueados durante envio e correção, com estado visível. A versão final passou em 59 testes e em `npm run check`; o dry-run de publicação também passou.

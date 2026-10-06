@@ -1,4 +1,5 @@
 import {blindSolvePrompt,assertBlindSolve,buildBlueprint,validateBlueprintTask,qualityReviewSchema,assertQualityReview,shuffleQuestionOptions,qualityReviewPrompt,sanitizeTaskPayload} from './c1.js';
+import {loadJourney,celebrate,JourneyError} from './journey.js';
 const KINDS = ['reading', 'listening', 'writing', 'speaking'];
 export class AppError extends Error { constructor(message, status = 400) { super(message); this.status = status; } }
 const json = (body, status = 200, extra = {}) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...extra } });
@@ -103,9 +104,12 @@ async function routes(request,env) {
   const id=validateProfile(url.searchParams.get('profile'));
   const tasks=(await env.DB.prepare('SELECT t.*, (SELECT COUNT(*) FROM attempts a WHERE a.task_id=t.id) AS attempts_count FROM tasks t WHERE profile_id=? AND retired_at IS NULL ORDER BY created_at DESC LIMIT 100').bind(id).all()).results;
   const attempts=(await env.DB.prepare('SELECT a.*,t.title,t.kind,t.diagnostic FROM attempts a JOIN tasks t ON t.id=a.task_id WHERE a.profile_id=? ORDER BY a.created_at DESC LIMIT 100').bind(id).all()).results;
+  const totals=await env.DB.prepare('SELECT COUNT(*) AS attempts,COUNT(DISTINCT t.kind) AS skills FROM attempts a JOIN tasks t ON t.id=a.task_id WHERE a.profile_id=?').bind(id).first();
   const day=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Maceio',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());const used=await env.DB.prepare('SELECT calls FROM ai_usage WHERE day=?').bind(day).first();
-  return json({usage:{calls:used?.calls || 0,limit:Math.min(100,Math.max(1,Number(env.DAILY_AI_LIMIT)||40))}, tasks:tasks.map(safeTask), attempts:attempts.map(a=>({...a,feedback:a.feedback?JSON.parse(a.feedback):null})), official:{guide:'https://examenes.cervantes.es/sites/default/files/Guia_examen_DELE_C1_2024_0.pdf',models:'https://examenes.cervantes.es/es/dele/preparar-prueba'} });
+  return json({stats:{attempts:totals?.attempts || 0,skills:totals?.skills || 0},usage:{calls:used?.calls || 0,limit:Math.min(100,Math.max(1,Number(env.DAILY_AI_LIMIT)||40))}, tasks:tasks.map(safeTask), attempts:attempts.map(a=>({...a,feedback:a.feedback?JSON.parse(a.feedback):null})), official:{guide:'https://examenes.cervantes.es/sites/default/files/Guia_examen_DELE_C1_2024_0.pdf',models:'https://examenes.cervantes.es/es/dele/preparar-prueba'} });
  }
+ if (path === '/api/journey' && method === 'GET') return json(await loadJourney(env.DB,validateProfile(url.searchParams.get('profile'))));
+ if (path === '/api/journey/celebrate' && method === 'POST') { const result=await celebrate(env.DB,await body(request)); return json(result,result.created?201:200); }
  if (path === '/api/tasks' && method === 'POST') {
   const input=await body(request), id=validateProfile(input.profile);
   if (!KINDS.includes(input.kind)) throw new AppError('Tipo de tarefa inválido.');
@@ -220,7 +224,9 @@ async function routes(request,env) {
   const profiles=(await env.DB.prepare('SELECT * FROM profiles').all()).results;
   const tasks=(await env.DB.prepare('SELECT * FROM tasks').all()).results;
   const attempts=(await env.DB.prepare('SELECT * FROM attempts').all()).results;
-  return json({exportedAt:new Date().toISOString(),profiles,tasks:tasks.map(safeTask),attempts,audioNotice:'Os áudios não estão incluídos neste arquivo; use o player de cada tentativa para baixá-los.'});
+  // Antes da migração 0005 a tabela não existe; a exportação dos estudos não pode falhar por isso.
+  const celebrations=(await env.DB.prepare('SELECT * FROM journey_celebrations ORDER BY created_at').all().catch(()=>({results:[]}))).results || [];
+  return json({exportedAt:new Date().toISOString(),profiles,tasks:tasks.map(safeTask),attempts,celebrations,audioNotice:'Os áudios não estão incluídos neste arquivo; use o player de cada tentativa para baixá-los.'});
  }
  throw new AppError('Página não encontrada.',404);
 }
@@ -230,6 +236,6 @@ export default {
   const url=new URL(request.url);
   if(!url.pathname.startsWith('/api/'))return env.ASSETS.fetch(request);
   try { return await routes(request,env); }
-  catch(error) { return json({message:error instanceof AppError?error.message:'Não foi possível concluir. Tente novamente.'},error instanceof AppError?error.status:500); }
+  catch(error) { const known=error instanceof AppError || error instanceof JourneyError; return json({message:known?error.message:'Não foi possível concluir. Tente novamente.'},known?error.status:500); }
  }
 };

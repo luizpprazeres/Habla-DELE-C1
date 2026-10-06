@@ -31,3 +31,9 @@ O cronômetro mede uma estimativa de tempo ativo: pausa ao ocultar a página, sa
 ## Verificação
 
 `npm test` verifica recortes C1, rejeição de ambiguidade e distratores fracos na revisão, evidências, embaralhamento, privacidade do gabarito e das fontes de áudio, acesso e cronômetro. `npm run check` verifica sintaxe. Testes manuais de API real verificam geração, correção escrita, voz sintética, armazenamento e transcrição. A captura física do microfone no celular precisa ser validada no aparelho de cada usuário.
+
+## Jornada a dois
+
+A versão 0.3.0 reconhece a primeira resposta, a prática de habilidades diferentes, a primeira reescrita e o primeiro diálogo continuado. Uma reescrita precisa mudar o texto e estar vinculada à correção anterior. O objetivo semanal cooperativo pede duas tarefas distintas e uma reescrita ou diálogo de cada pessoa; não usa ranking, sequência diária obrigatória, pontos ou notas de aprovação. O outro perfil pode reconhecer uma conquista com uma mensagem breve. Os marcos permanecem ao mudar de semana. Esta parte usa apenas o banco, sem chamadas extras de IA.
+
+San Sebastián/Donostia, Bilbao e Santiago de Compostela aparecem como referências culturais, com hospitais e catedrais em páginas institucionais. As referências não interferem nos exercícios. Metodologia em [docs/JORNADA.md](docs/JORNADA.md) e fontes em [docs/REFERENCIAS-CIDADES.md](docs/REFERENCIAS-CIDADES.md).

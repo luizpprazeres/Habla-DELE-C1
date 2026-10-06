@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 180" fill="none" stroke="#ff7a1a" stroke-opacity=".6" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+<!-- Silhueta esquemática e original de uma torre gótica de catedral, livremente inspirada no perfil vertical do Buen Pastor. Não é desenho técnico nem reprodução fiel. -->
+<style>*{vector-effect:non-scaling-stroke}</style>
+<path d="M30 1v9M27.5 4h5"/>
+<path d="M21 70 30 10l9 60M24.3 48h11.4M27 30h6"/>
+<path d="M17 74l1.5-14 1.5 14M40 74l1.5-14 1.5 14"/>
+<path d="M18 112V70h24v42"/>
+<path d="M23 104V84q0-5 2.5-8 2.5 3 2.5 8v20M32 104V84q0-5 2.5-8 2.5 3 2.5 8v20"/>
+<path d="M15 112h30M15 112v67M45 112v67"/>
+<path d="M9 179v-55l3-8 3 8M45 124l3-8 3 8v55"/>
+<circle cx="30" cy="130" r="6"/><circle cx="30" cy="130" r="2"/>
+<path d="M24 179v-19q0-8 6-12 6 4 6 12v19"/>
+<path d="M2 179.5h56"/>
+</svg>

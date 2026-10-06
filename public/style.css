@@ -15,7 +15,7 @@
 
 /* Base */
 *,*::before,*::after{box-sizing:border-box}
-body{--nav-h:61px;margin:0;min-height:100dvh;display:flex;flex-direction:column;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));background:var(--bg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{--nav-h:61px;margin:0;overflow-wrap:break-word;min-height:100dvh;display:flex;flex-direction:column;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));background:var(--bg);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none;padding:0}
 button:disabled{cursor:not-allowed;opacity:.5}
@@ -51,14 +51,16 @@ h1+.sub,.hero-intro p{font-size:17px;max-width:60ch}
 /* Navegação: barra inferior no celular, abas no topo a partir de 760px */
 .shell{flex:1;width:100%;max-width:1080px;margin:0 auto;padding:20px var(--pad-r) 0 var(--pad-l)}
 nav{position:fixed;z-index:20;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);border-top:1px solid var(--line-strong);background:var(--bg)}
-nav button{position:relative;min-height:60px;padding:8px 2px;color:var(--sub);font-size:clamp(13px,3.8vw,15px);font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+nav button{position:relative;min-width:0;min-height:60px;padding:8px 2px;color:var(--sub);font-size:clamp(13px,3.75vw,15px);font-weight:600;letter-spacing:-.01em;white-space:nowrap}
 nav button::before{content:"";position:absolute;top:-1px;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px}
 nav button:focus-visible{outline-offset:-4px}
 nav button:hover:not(:disabled){color:var(--ink)}
 nav .active,nav .active:hover:not(:disabled){color:var(--accent)}
 nav .active::before{background:var(--accent)}
 /* Escrevendo: a barra some para liberar a tela e o teclado. */
-body:has(textarea:focus,input:not([type=radio],[type=checkbox],[type=file]):focus) nav{display:none}
+body:has(textarea:focus,input:not([type=radio],[type=checkbox],[type=file]):focus) nav,body.keyboard-open nav{display:none}
+/* --kb: altura coberta pelo teclado (visualViewport); mantém o aviso visível acima dele. */
+body.keyboard-open #toast{bottom:calc(var(--kb,0px) + 12px)}
 main{min-height:60vh;padding-bottom:40px}
 .loading{padding:32px 0;color:var(--sub)}
 
@@ -104,6 +106,7 @@ main{min-height:60vh;padding-bottom:40px}
 .available-tasks[open]>summary{margin-bottom:12px}
 .empty{padding:24px 20px;border:1px dashed var(--line-strong);border-radius:var(--r-lg);color:var(--sub)}
 .notice{margin:16px 0;padding:12px 14px;border-radius:var(--r);background:var(--surface-2);color:var(--sub);font-size:14px;line-height:1.55}
+.notice.action-error{color:var(--ink);box-shadow:inset 3px 0 0 var(--danger)}
 .divider{height:1px;margin:32px 0;background:var(--line)}
 
 /* Botões */
@@ -116,10 +119,6 @@ main{min-height:60vh;padding-bottom:40px}
 .full{width:100%}
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
 .actions>.primary,.actions>.secondary{flex:1 1 160px}
-label.secondary{position:relative;cursor:pointer}
-label.secondary:focus-within{outline:3px solid var(--accent);outline-offset:3px}
-/* Mantém o seletor de arquivo alcançável pelo teclado sem mudar a marcação do JS. */
-label.secondary>input[type=file][hidden]{display:block!important;position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
 .secondary.recording,.recording{background:var(--danger);color:var(--on-accent);box-shadow:none}
 body:has(.recording) #recording-note{color:var(--danger);font-weight:600}
 .modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:20px 0 24px}
@@ -239,9 +238,80 @@ footer{width:100%;max-width:1080px;margin:0 auto;padding:24px var(--pad-r) 32px 
 .tabs [role=tab][aria-selected=true]::after{content:"";position:absolute;left:14px;right:14px;bottom:-1px;height:3px;border-radius:3px 3px 0 0;background:var(--accent)}
 .skeleton{display:block;min-height:1em;border-radius:var(--r-sm);background:var(--surface-3)}
 
+/* Jornada a dois: painel compacto no Meu dia, marcos na Evolução, cidades nas Referências.
+   Paisagem em CSS (colinas e horizonte de La Concha) e torre gótica em traço fino (torre-gotica.svg),
+   silhueta esquemática e decorativa, sem pretensão de precisão arquitetônica. */
+.journey{margin:16px 0;padding:0 20px 20px;overflow:hidden;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--surface)}
+.journey-scene{--hills:radial-gradient(58px 22px at 4% 100%,var(--surface-3) 97%,transparent 100%),radial-gradient(84px 26px at 97% 100%,var(--surface-3) 97%,transparent 100%),radial-gradient(12px 6px at 55% 100%,var(--surface-3) 95%,transparent 100%),linear-gradient(to bottom,var(--surface),var(--accent-soft));height:30px;margin:0 -20px 14px;border-bottom:1px solid var(--accent-line);background:var(--hills)}
+.journey>.journey-scene{height:44px;background:url(/torre-gotica.svg) no-repeat 72% 100%/auto 40px,var(--hills)}
+.journey:not(:has(.journey-scene)){padding-top:18px}
+.journey-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px}
+.journey-head h2{font-size:20px}
+.journey-head .sub{font-size:14px;font-variant-numeric:tabular-nums}
+.journey-goal{margin:8px 0 0;color:var(--sub);font-size:15px}
+.journey-goal strong{color:var(--ink)}
+.journey-pair{display:grid;gap:8px;margin:14px 0 0;padding:0;list-style:none}
+.journey-pair li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:2px 12px;padding:10px 12px;border-radius:var(--r);background:var(--surface-2)}
+.journey-name{font-weight:650}
+.journey-name .sub{font-size:14px;font-weight:400}
+.journey-count{grid-column:1/-1;font-size:14px}
+.journey-state{font-size:13px;font-weight:650;color:var(--muted);text-align:right}
+.journey-state[data-done=true]{color:var(--accent)}
+.journey-next{margin:14px 0 0;color:var(--ink);font-size:16px}
+.journey-next .sub{display:block;font-size:13px;font-weight:600}
+.journey-foot{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:0 16px;margin-top:6px}
+.journey-place{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.journey-church{display:inline-flex;align-items:center;min-height:44px;margin-top:0;color:var(--muted);font-size:14px;line-height:1.3}
+a.journey-church{text-decoration:underline;text-decoration-color:var(--line-strong);text-decoration-thickness:1px;text-underline-offset:4px}
+a.journey-church:hover{color:var(--sub);text-decoration-color:var(--accent)}
+.link-btn{min-height:44px;color:var(--accent);font-size:15px;font-weight:600;text-align:left;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.link-btn:hover:not(:disabled){text-decoration-thickness:2px}
+.journey-place .link-btn{color:var(--sub)}
+.journey-error{margin:10px 0 12px}
+.journey-skeleton{display:grid;gap:10px;margin-top:14px}
+.journey-skeleton .skeleton{height:44px;border-radius:var(--r)}
+.journey-skeleton .skeleton.short{width:55%;height:18px}
+.celebration-note{margin:10px 0 0;padding-left:12px;border-left:2px solid var(--accent-line);color:var(--ink);font-size:15px;line-height:1.5}
+.milestones-intro{margin:-6px 0 8px}
+.shared-goal{margin:0 0 20px;padding:12px 14px;border-radius:var(--r);background:var(--surface-2);color:var(--sub);font-size:15px}
+.shared-goal strong{color:var(--ink)}
+.readiness{margin-top:0}
+.partner{margin:8px 0 28px}
+.partner-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px;margin-bottom:4px}
+.partner-head .sub{font-size:14px;font-variant-numeric:tabular-nums}
+.milestones{margin:0;padding:0;list-style:none}
+.milestone{padding:14px 0}
+.milestone+.milestone{border-top:1px solid var(--line)}
+.milestone:focus{outline:none}
+.milestone:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.milestone-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px}
+.milestone-head strong{font-size:16px}
+.milestone[data-earned=false] .milestone-head strong{color:var(--sub);font-weight:600}
+.milestone p.sub{margin:4px 0 0;font-size:14px}
+.milestone-state{font-size:13px;font-weight:650;color:var(--muted);font-variant-numeric:tabular-nums}
+.milestone[data-earned=true] .milestone-state{color:var(--accent)}
+.celebrate{margin:6px 0 0}
+.celebrate>summary{min-height:44px;padding:6px 0;color:var(--accent);font-size:15px}
+.celebrate-options{display:grid;gap:8px}
+.celebrate-options .secondary{justify-content:flex-start;min-height:48px;font-size:15px;font-weight:600;text-align:left}
+.celebrated{color:var(--muted)}
+.cities{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.city{display:flex;flex-direction:column;align-items:flex-start}
+.city[data-main=true]{overflow:hidden;padding-top:0;padding-right:76px;border-color:var(--accent-line);background-image:url(/torre-gotica.svg);background-repeat:no-repeat;background-position:right 18px bottom 16px;background-size:auto 128px}
+.city .journey-scene{align-self:stretch;margin:0 -20px 16px}
+.city[data-main=true] .journey-scene{margin-right:-76px}
+.city p{margin:2px 0 0}
+/* Igreja e hospital: rótulo curto acima, nome em destaque, link institucional abaixo. */
+.city-refs{display:grid;gap:14px;align-self:stretch;margin:14px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+.city-ref{display:grid;gap:2px;min-width:0}
+.city-ref dt{color:var(--muted);font-size:13px;font-weight:650}
+.city-ref dd{display:flex;flex-direction:column;align-items:flex-start;margin:0}
+.city-ref-name{color:var(--ink);font-weight:600}
+.city a{display:inline-flex;align-items:center;min-height:44px;font-size:15px;font-weight:650}
+
 /* Larguras */
 @media(max-width:399px){.profiles{flex-basis:100%;margin-left:0}.profiles button{flex:1}.history-row{flex-wrap:wrap}.history-row .secondary{width:100%}}
-@media(min-width:720px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}}
+@media(min-width:720px){.grid,.cities{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.city[data-main=true]{grid-column:1/-1;padding-right:128px;background-position:right 32px bottom 18px;background-size:auto 172px}.city[data-main=true] .journey-scene{margin-right:-128px}.city[data-main=true] .city-refs{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 24px}}
 @media(min-width:760px){
  body{--nav-h:0px}
  .topbar{padding:20px var(--pad-r) 8px var(--pad-l);border-bottom:0}
@@ -261,6 +331,12 @@ footer{width:100%;max-width:1080px;margin:0 auto;padding:24px var(--pad-r) 32px 
  .feedback{padding:28px}
  #task-feedback>.primary{width:auto}
  .next-task{align-items:flex-start;padding:28px}
+ .journey{padding:0 24px 22px}
+ .journey-scene{height:38px;margin:0 -24px 16px}
+ .journey>.journey-scene{height:52px;background-size:auto 48px,auto,auto,auto,auto}
+ .city .journey-scene{margin:0 -24px 18px}
+ .city[data-main=true] .journey-scene{margin-right:-128px}
+ .journey-pair{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(min-width:1024px){.topbar,.shell,footer{--pad-l:28px;--pad-r:28px}}
 
@@ -272,6 +348,12 @@ footer{width:100%;max-width:1080px;margin:0 auto;padding:24px var(--pad-r) 32px 
 @keyframes hb-pulse{50%{opacity:.45}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 @media(forced-colors:active){
- .primary,.secondary,.choice,.modes button,.timer-toggle,.listen-controls button,.tag,.difficulty{border:1px solid ButtonText}
+ .primary,.secondary,.choice,.modes button,.timer-toggle,.listen-controls button,.tag,.difficulty,.journey,.journey-pair li{border:1px solid ButtonText}
+ .journey-scene{display:none}
+ .city[data-main=true]{background-image:none}
  [aria-pressed=true],[aria-selected=true],nav .active,.choice:has(input:checked){outline:2px solid Highlight;outline-offset:-2px}
 }
+
+/* Espaço para focar e rolar controles acima da navegação fixa. */
+html{scroll-padding-block:16px calc(80px + env(safe-area-inset-bottom))}
+button,summary,textarea,input,select,[tabindex]{scroll-margin-block:16px 80px}
