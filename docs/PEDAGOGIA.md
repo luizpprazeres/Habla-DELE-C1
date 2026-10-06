@@ -57,4 +57,6 @@ Antes da revisão, uma chamada recebe somente fonte, enunciados e alternativas, 
 - A revisão usa GPT-5.4 em uma chamada separada, sem o histórico de geração; não é um examinador humano nem uma avaliação cega, pois recebe a chave no mesmo pedido. Os modelos oficiais cronometrados e as sessões com professor continuam sendo a calibração.
 - A revisão acrescenta uma chamada de IA e a resolução cega acrescenta outra nas tarefas objetivas, dentro do limite diário compartilhado.
 
-O gerador usa GPT-5.5; os dois verificadores usam GPT-5.4; a correção usa GPT-5.4 mini. Os três usam raciocínio low. O modelo pode errar mesmo concordando com a chave. Uma tarefa rejeitada pode ser reparada até duas vezes. Conjuntos com distratores extremos repetidos também são barrados; um absoluto isolado não é proibido.
+O gerador usa GPT-5.5; os dois verificadores usam GPT-5.4; a correção usa GPT-5.4 mini. A geração de escuta usa raciocínio medium; os demais pedidos usam low. O modelo pode errar mesmo concordando com a chave. Uma tarefa rejeitada pode ser reparada até duas vezes. Conjuntos com distratores extremos repetidos também são barrados; um absoluto isolado não é proibido.
+
+Durante reparos, uma fonte com extensão adequada é preservada no servidor; o modelo ajusta os itens. O campo source sai vazio da resposta estruturada e é restaurado antes de validar evidências, resolver sem chave e revisar. Isso evita a restrição da API a literais de enum com quebras de linha.
