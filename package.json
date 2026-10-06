@@ -1,0 +1,16 @@
+{
+  "name": "tutor-dele",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --port 8787",
+    "test": "node --test tests/*.test.js",
+    "check": "node --check src/worker.js && node --check src/c1.js && node --check public/app.js && node --check public/study-clock.js",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 migrations apply DB --local"
+  },
+  "devDependencies": {
+    "wrangler": "4.147.0"
+  }
+}

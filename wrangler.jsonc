@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tutor-dele",
+  "main": "src/worker.js",
+  "workers_dev": true,
+  "preview_urls": false,
+  "compatibility_date": "2026-10-05",
+  "account_id": "d91558d058649c1c431b70cb360c7ddc",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/*"
+    ]
+  },
+  "vars": {
+    "TEXT_MODEL": "gpt-5.4-mini",
+    "TRANSCRIBE_MODEL": "gpt-transcribe",
+    "DAILY_AI_LIMIT": "40",
+    "TASK_MODEL": "gpt-5.5",
+    "REVIEW_MODEL": "gpt-5.4"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tutor-dele",
+      "database_id": "3733af98-c669-4d7c-97a4-4e6e3c945e98",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
