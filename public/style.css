@@ -58,7 +58,7 @@ nav button:hover:not(:disabled){color:var(--ink)}
 nav .active,nav .active:hover:not(:disabled){color:var(--accent)}
 nav .active::before{background:var(--accent)}
 /* Escrevendo: a barra some para liberar a tela e o teclado. */
-body:has(textarea:focus,input:not([type=radio],[type=checkbox],[type=file]):focus) nav,body.keyboard-open nav{display:none}
+@media(max-width:759px){body:has(textarea:focus,input:not([type=radio],[type=checkbox],[type=file]):focus) nav,body.keyboard-open nav{display:none}}
 /* --kb: altura coberta pelo teclado (visualViewport); mantém o aviso visível acima dele. */
 body.keyboard-open #toast{bottom:calc(var(--kb,0px) + 12px)}
 main{min-height:60vh;padding-bottom:40px}
