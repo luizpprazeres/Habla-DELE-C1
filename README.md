@@ -16,9 +16,9 @@ Responder primeiro, revisar até três prioridades, tentar novamente e voltar ao
 
 ## Limites e custos
 
-As chamadas OpenAI usam o saldo da API do usuário. O limite de 40 chamadas por dia é compartilhado pelos dois perfis, inclui geração, correção, voz e transcrição, e não constitui um teto financeiro. Criar leitura/escuta usa pelo menos três chamadas; produção usa pelo menos duas. Reparos e tentativas com falha também consomem chamadas. As tarefas usam GPT-5.5 e a verificação usa GPT-5.4; as correções usam GPT-5.4 mini; escuta usa voz sintética, claramente identificada.
+As chamadas OpenAI usam o saldo da API do usuário. O limite de 40 chamadas por dia é compartilhado pelos dois perfis, inclui geração, correção, voz e transcrição, e não constitui um teto financeiro. Criar leitura/escuta usa pelo menos três chamadas de texto; produção usa pelo menos duas. A primeira voz acrescenta uma chamada por trecho de até 4096 caracteres; reprodução já armazenada não chama IA. Reparos e tentativas com falha também consomem chamadas. As tarefas usam GPT-5.5 e a verificação usa GPT-5.4; as correções usam GPT-5.4 mini; escuta usa voz sintética, claramente identificada.
 
-Sem ativar R2, as gravações ficam no D1: até 900 KB por arquivo e 20 MB no conjunto. A gravação no navegador tenta usar 24 kbps e para em cinco minutos. Arquivos importados de maior qualidade podem exceder esse limite. O backend também aceita uma futura binding R2 `AUDIO`, ainda não configurada. Não há exclusão automática de gravações. Áudios de estímulo são reutilizados no navegador e, quando cabem, em cache separado no D1, dividido em partes de até 900 KB (até 10 MB por áudio e 20 MB no conjunto). A exportação JSON inclui perfis, tarefas e respostas; baixar áudios individualmente no histórico.
+Sem ativar R2, as gravações ficam no D1: até 900 KB por arquivo e 20 MB no conjunto. A gravação no navegador tenta usar 24 kbps e para em cinco minutos. Arquivos importados de maior qualidade podem exceder esse limite. O backend também aceita uma futura binding R2 `AUDIO`, ainda não configurada. Não há exclusão automática de gravações. Áudios de estímulo são reutilizados no navegador e, quando cabem, em cache separado no D1, dividido em partes de até 900 KB (até 10 MB por áudio e 100 MB no conjunto). A exportação JSON inclui perfis, tarefas e respostas; baixar áudios individualmente no histórico.
 
 O feedback da fala analisa a transcrição revisada pelo aluno; não avalia pronúncia ou fluidez. As bandas são estimativas não calibradas. Gabaritos objetivos exigem evidência literal na fonte e revisão automática; ambas podem errar e não garantem a qualidade pedagógica. Os detalhes dos recortes e limites estão em [docs/PEDAGOGIA.md](docs/PEDAGOGIA.md).
 
@@ -53,3 +53,11 @@ O álbum compartilhado permite escolher uma foto, visualizar, escrever legenda e
 A luz dos blocos é estática e discreta. As entradas usam apenas opacidade e 4 px em 180 ms, respeitando movimento reduzido. Não há parallax, confete, pulsação ou carrossel automático.
 
 Recuperação após recarga: UUID/estado pendente também ficam na sessão. O álbum confere o envio; se não estiver confirmado, pede escolher novamente a mesma foto e mantém o UUID. Não armazena pixels no sessionStorage.
+
+## Aprendizagem 0.5.0
+
+Caderno de erros por perfil, três revisões curtas com agenda 1/3/7/14 dias, resposta de revisão preservada e calendário semanal com plano diário opcional. Acesso, início e resposta enviada são separados; sem meta não há “concluído”. Rota pelas cidades reutiliza os marcos existentes. Observações qualitativas futuras exigem trechos comparáveis reais da resposta anterior e atual.
+
+Escuta oferece biblioteca com áudios prontos primeiro e geração personalizada. Reposição agendada limitada pelo teto compartilhado; a biblioteca pode esgotar. Revisores executam em paralelo com os mesmos gates C1. Voz com cache privado e trava por tarefa; fontes maiores que 4096 caracteres divididas em trechos. Migrações 0007–0009 necessárias antes do deploy. Calendário começa a registrar acessos/inícios a partir desta versão; respostas antigas são aproveitadas sem inventar acessos anteriores.
+
+Interface web mais ampla, revisões compactas, informações da cidade recolhidas e câmera/galeria separadas. Capture de câmera precisa ser conferido em aparelho iOS e Android. Detalhes, comparação de estratégias e limitações em [docs/MELHORIAS-2026-10-07.md](docs/MELHORIAS-2026-10-07.md).

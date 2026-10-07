@@ -1,0 +1,1 @@
+ALTER TABLE learning_reviews ADD COLUMN answer TEXT NOT NULL DEFAULT '';

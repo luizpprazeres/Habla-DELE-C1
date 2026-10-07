@@ -39,7 +39,7 @@ h1+.sub,.hero-intro p{font-size:17px;max-width:60ch}
 [hidden]{display:none!important}
 
 /* Topo e perfis */
-.topbar{width:100%;max-width:1120px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) var(--pad-r) 12px var(--pad-l);display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;border-bottom:1px solid var(--line)}
+.topbar{width:100%;max-width:1800px;margin:0 auto;padding:max(12px,env(safe-area-inset-top)) var(--pad-r) 12px var(--pad-l);display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;border-bottom:1px solid var(--line)}
 .brand{display:inline-flex;align-items:center;min-height:44px;font-family:var(--font-display);font-weight:800;font-size:28px;line-height:1;letter-spacing:-.05em;color:var(--ink);text-decoration:none}
 .brand span{color:var(--accent)}
 .exam-chip{padding:4px 8px;border:1px solid var(--line-strong);border-radius:var(--r-sm);color:var(--sub);font-size:13px;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
@@ -49,7 +49,7 @@ h1+.sub,.hero-intro p{font-size:17px;max-width:60ch}
 .profiles [aria-pressed=true],.profiles [aria-pressed=true]:hover:not(:disabled){background:var(--ink);color:var(--bg)}
 
 /* Navegação: barra inferior no celular, abas no topo a partir de 760px */
-.shell{flex:1;width:100%;max-width:1080px;margin:0 auto;padding:20px var(--pad-r) 0 var(--pad-l)}
+.shell{flex:1;width:100%;max-width:1800px;margin:0 auto;padding:20px var(--pad-r) 0 var(--pad-l)}
 nav{position:fixed;z-index:20;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);border-top:1px solid var(--line-strong);background:var(--bg)}
 nav button{position:relative;min-width:0;min-height:60px;padding:8px 2px;color:var(--sub);font-size:clamp(13px,3.75vw,15px);font-weight:600;letter-spacing:-.01em;white-space:nowrap}
 nav button::before{content:"";position:absolute;top:-1px;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px}
@@ -199,7 +199,7 @@ details[open]>summary::before{transform:rotate(45deg)}
 .access label{color:var(--ink);font-weight:600}
 .access input{width:100%;min-height:52px;margin:0 0 8px;padding:12px 14px;border:1px solid var(--field-line);border-radius:var(--r);background:var(--surface);color:var(--ink);font-size:18px}
 #toast{position:fixed;z-index:40;left:50%;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px);transform:translateX(-50%);width:max-content;max-width:min(520px,calc(100% - 32px));padding:12px 16px;border-radius:var(--r);background:var(--ink);color:var(--bg);font-size:15px;font-weight:600;box-shadow:0 12px 32px rgba(0,0,0,.7)}
-footer{width:100%;max-width:1080px;margin:0 auto;padding:24px var(--pad-r) 32px var(--pad-l);border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+footer{width:100%;max-width:1800px;margin:0 auto;padding:24px var(--pad-r) 32px var(--pad-l);border-top:1px solid var(--line);color:var(--muted);font-size:14px}
 
 /* Meu dia: saudação curta; a imagem da cidade do dia vive no painel da próxima tarefa (uma imagem por tela).
    donostia.svg continua como fallback quando o catálogo de cidades ou a foto de Donostia falham. */
@@ -349,7 +349,8 @@ a.journey-church:hover{color:var(--sub);text-decoration-color:var(--accent)}
  .city[data-main=true] .journey-scene{margin-right:-128px}
  .journey-pair{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-@media(min-width:1024px){.topbar,.shell,footer{--pad-l:28px;--pad-r:28px}}
+/* Desktop: quase toda a largura (até 1800px) com margens de 24 a 40px; o corpo do texto não cresce. */
+@media(min-width:1024px){.topbar,.shell,footer{--pad-l:max(clamp(24px,2.5vw,40px),env(safe-area-inset-left));--pad-r:max(clamp(24px,2.5vw,40px),env(safe-area-inset-right))}}
 
 /* Movimento mínimo e acessibilidade */
 @media(prefers-reduced-motion:no-preference){
@@ -419,7 +420,12 @@ button,summary,textarea,input,select,[tabindex]{scroll-margin-block:16px 80px}
 .city-fact strong{display:block;font-size:16px}
 .city-fact p{margin:4px 0 0;color:var(--ink);font-size:16px;line-height:1.55}
 .city-fact a,.credits a{display:inline-flex;align-items:center;min-height:44px;font-size:14px;font-weight:600}
-.city-more{margin:4px 0 0}
+/* Cidade compacta: hora, tempo, referências e crédito completo dentro de "Sobre este lugar". */
+.city-about{margin:6px 0 0;border-top:1px solid var(--line)}
+.city-about>summary{color:var(--accent);font-size:15px}
+.city-about .city-now{margin:2px 0 8px}
+.city-credit{margin-top:8px;padding-top:4px;border-top:1px solid var(--line)}
+.credit-links{display:flex;flex-wrap:wrap;gap:0 16px;margin-top:0}
 .city-ref-line{margin:8px 0;font-size:15px}
 .photo-credit{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
 .xp-skel-line{display:block;width:60%;height:20px;margin-top:6px}
@@ -453,7 +459,8 @@ button,summary,textarea,input,select,[tabindex]{scroll-margin-block:16px 80px}
 /* Álbum a dois: formulário estável (não repinta na atualização) e grade de fotos. */
 .album-form{display:grid;gap:8px;padding:18px;border:1px solid var(--line);border-radius:var(--r-lg);background-color:var(--surface)}
 .album-form label{margin-top:6px;color:var(--ink);font-size:15px;font-weight:600}
-.album-pick .secondary{width:100%}
+.album-pick-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,168px),1fr));gap:8px}
+.album-pick .secondary{width:100%;white-space:nowrap}
 .album-help{margin:8px 0 0;font-size:14px}
 .album-caption{min-height:96px;font-size:16px;line-height:1.55}
 .album-meta{display:flex;justify-content:flex-end;font-size:13px;font-variant-numeric:tabular-nums}
@@ -487,7 +494,7 @@ button,summary,textarea,input,select,[tabindex]{scroll-margin-block:16px 80px}
 .credits li strong{flex-basis:100%}
 .credits li .sub{font-size:14px}
 
-@media(min-width:720px){.shared-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.album-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.album-pick .secondary,.album-form .primary{width:auto;justify-self:start}}
+@media(min-width:720px){.shared-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.album-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.album-pick-actions{display:flex;flex-wrap:wrap}.album-pick .secondary,.album-form .primary{width:auto;justify-self:start}}
 @media(min-width:760px){
  .next-task{--np:32px;padding:76px var(--np) 32px;min-height:360px;justify-content:center}
  .next-task>:not(.lesson-photo){max-width:56%}
@@ -513,3 +520,124 @@ button,summary,textarea,input,select,[tabindex]{scroll-margin-block:16px 80px}
 /* Créditos culturais também precisam funcionar com o polegar. */
 .photo-credit a,.city-ref-line a{display:inline-flex;align-items:center;min-height:44px;margin-right:8px}
 [data-xp-album-updated]{display:block;margin-top:12px}
+
+/* Leitura confortável em telas largas: parágrafos e avisos até 75 caracteres por linha. */
+main p,.notice,.shared-goal{max-width:75ch}
+.own-history{max-width:1080px}
+
+/* Meu dia em duas colunas (app.js monta .today-layout > .today-main + .today-aside).
+   Celular: uma coluna, na ordem do HTML. Desktop >= 1100px: destaque à esquerda, apoio do dia à direita. */
+.today-layout{display:grid;grid-template-columns:minmax(0,1fr);gap:0 28px;align-items:start}
+.today-main,.today-aside{min-width:0}
+.today-aside>:first-child{margin-top:0}
+@media(min-width:1100px){
+ .today-layout{grid-template-columns:minmax(0,1.5fr) minmax(320px,1fr)}
+ .today-main>.next-task:first-child{margin-top:0}
+ .today-layout .next-task>:not(.lesson-photo){max-width:min(62%,640px)}
+ .today-aside .xp-city,.today-aside .journey{margin:0 0 16px}
+}
+@media(min-width:1100px){
+ .grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr))}
+ .album-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+ [data-journey-slot=detail]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px;align-items:start}
+ [data-journey-slot=detail]>:not(.partner){grid-column:1/-1}
+}
+
+/* Slots de aprendizagem (calendário, revisões, caderno, avaliação qualitativa).
+   O app.js preenche [data-learning-slot]; vazio, o slot não ocupa espaço. */
+.learning-slot{margin:0 0 16px;padding:18px 20px;border:1px solid var(--line);border-radius:var(--r-lg);background-color:var(--surface);border-color:var(--line-hi) var(--line) var(--line) var(--line-hi);background-image:var(--lit);box-shadow:var(--lit-edge),var(--depth)}
+.learning-slot:empty{display:none}
+.learning-slot h2{font-size:20px}
+.learning-slot h3{font-size:17px}
+.learning-slot>p:first-of-type{margin-top:6px}
+.learning-slot :is(input:not([type=radio],[type=checkbox]),textarea,select){font-size:16px}
+.learning-slot :is(button,a.secondary,a.primary,summary){min-height:44px}
+
+/* Semana: 7 colunas. O estado vem em data-state e em texto no próprio dia;
+   cada estado tem forma própria no marcador, então não depende só da cor. */
+/* Abaixo de ~380px os 7 dias não cabem com alvos de 44px: a faixa rola com snap em vez de encolher o toque. */
+.week-strip{display:grid;grid-template-columns:repeat(7,minmax(44px,1fr));gap:4px;margin:12px 0 4px;padding:0;list-style:none;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:thin}
+.week-strip>li{display:grid;min-width:0;scroll-snap-align:start}
+.week-strip>li>.week-day,.week-strip>.week-day{width:100%}
+.week-day{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;min-width:44px;min-height:64px;padding:8px 2px;border-radius:var(--r);background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);color:var(--sub);font-size:13px;font-weight:600;line-height:1.25;text-align:center;font-variant-numeric:tabular-nums}
+button.week-day:hover:not(:disabled){box-shadow:inset 0 0 0 1px var(--line-strong);color:var(--ink)}
+.week-day:has(.week-dot)::before{content:none}
+.week-day::before,.week-dot{content:"";display:block;flex:none;width:14px;height:14px;border-radius:50%;box-sizing:border-box;border:2px solid var(--line-strong)}
+.week-day[data-state=none]::before,.week-day[data-state=none] .week-dot{width:12px;height:2px;margin:6px 0;border:0;border-radius:1px;background:var(--line-strong)}
+.week-day[data-state=planned]::before,.week-day[data-state=planned] .week-dot{border-style:dashed;border-color:var(--sub)}
+.week-day[data-state=visited]::before,.week-day[data-state=visited] .week-dot{border-width:1.5px;border-color:var(--ink)}
+.week-day[data-state=started]::before,.week-day[data-state=started] .week-dot{border-color:var(--accent);background:linear-gradient(90deg,var(--accent) 50%,transparent 50%)}
+.week-day[data-state=partial]::before,.week-day[data-state=partial] .week-dot{border-color:var(--accent);background:linear-gradient(0deg,var(--accent) 50%,transparent 50%)}
+.week-day[data-state=submitted]::before,.week-day[data-state=submitted] .week-dot{border-color:var(--accent);background:var(--accent)}
+.week-day[data-state=complete]::before,.week-day[data-state=complete] .week-dot{border-radius:3px;border-color:var(--accent);background:var(--accent);box-shadow:inset 0 0 0 3px var(--surface-2)}
+.week-day[data-state=complete],.week-day[data-state=submitted]{color:var(--ink)}
+.week-day[aria-current=date],.week-day[data-today=true]{box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink)}
+
+/* Caderno de erros e revisões: um erro por cartão, resposta e ações logo abaixo. */
+.error-card{display:grid;gap:8px;margin:12px 0;padding:16px;border:1px solid var(--line-strong);border-radius:var(--r-lg);background:var(--surface-2)}
+.error-card>*{margin:0}
+.error-card [lang=es]{font-size:17px;line-height:1.6}
+.error-card del,.error-card .error-original{color:var(--sub);text-decoration-color:var(--danger)}
+.error-card ins,.error-card .error-fix{padding-left:12px;border-left:3px solid var(--ok);color:var(--ink);text-decoration:none}
+.review-answer{display:grid;gap:6px;margin:8px 0 0}
+.review-answer label{color:var(--ink);font-size:15px;font-weight:600}
+.review-answer :is(input:not([type=radio],[type=checkbox]),textarea){width:100%;min-height:48px;padding:12px 14px;border:1px solid var(--field-line);border-radius:var(--r);background:var(--surface);color:var(--ink);font-size:16px;line-height:1.55;caret-color:var(--accent)}
+.review-answer textarea{min-height:120px}
+.review-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+.review-actions>:is(button,a){min-height:44px}
+.review-actions>:is(.primary,.secondary){flex:1 1 160px}
+@media(min-width:760px){.learning-slot{padding:22px 24px}.review-actions>:is(.primary,.secondary){flex:0 0 auto}}
+
+/* Rota pela Espanha (journey-map.js): linha reta em laranja discreto, marcadores monocromáticos.
+   Celular: lista vertical. A partir de 720px: cinco etapas lado a lado. Estado sempre em texto. */
+.journey-map{margin:12px 0 20px;padding:16px 0 4px;border-top:1px solid var(--line)}
+.journey-map-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px}
+.journey-map-head h3{font-size:17px}
+.journey-map-head .sub{font-size:14px;font-weight:400;font-variant-numeric:tabular-nums}
+.journey-map-note{margin:4px 0 12px;font-size:14px}
+.journey-route{position:relative;display:grid;gap:4px;margin:0;padding:0;list-style:none}
+.journey-route::before{content:"";position:absolute;top:22px;bottom:22px;left:21px;width:2px;background:var(--accent-line)}
+.route-stop{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);align-items:start;gap:12px;padding:4px 0}
+.route-mark{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--bg);box-shadow:inset 0 0 0 1.5px var(--line-strong);color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.02em}
+.route-stop[data-state=earned] .route-mark{background:var(--ink);box-shadow:none;color:var(--bg)}
+.route-stop[data-state=next] .route-mark{box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink)}
+.route-stop[data-state=pending] .route-mark{box-shadow:inset 0 0 0 1.5px var(--line-strong);background-image:repeating-linear-gradient(135deg,transparent 0 5px,rgba(255,255,255,.04) 5px 6px);background-color:var(--bg)}
+.route-body{display:grid;gap:0;min-width:0;padding-top:2px}
+.route-city{font-size:16px;line-height:1.35}
+.route-status{color:var(--sub);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.route-stop[data-state=earned] .route-status{color:var(--ink)}
+.route-stop[data-state=next] .route-status{color:var(--accent)}
+.route-title{margin:2px 0 0;color:var(--sub);font-size:14px}
+.route-detail{margin:0}
+.route-detail>summary{min-height:44px;padding:4px 0;color:var(--sub);font-size:14px;font-weight:600}
+.route-detail>summary:hover{color:var(--ink)}
+.route-detail p{margin:0 0 8px;color:var(--sub);font-size:14px}
+.route-next{margin:10px 0 0;color:var(--ink);font-size:15px}
+@media(min-width:720px){
+ .journey-route{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+ .journey-route::before{top:21px;bottom:auto;left:10%;right:10%;width:auto;height:2px}
+ .route-stop{grid-template-columns:minmax(0,1fr);justify-items:center;gap:8px;text-align:center}
+ .route-body{justify-items:center}
+ .route-detail>summary{justify-content:center;text-align:left}
+}
+@media(forced-colors:active){
+ .learning-slot{background-image:none;box-shadow:none}
+ .week-day,.error-card,.route-mark{border:1px solid CanvasText}
+ .week-day::before,.week-dot,.journey-route::before{forced-color-adjust:none;border-color:CanvasText}
+ .week-day[data-state=started]::before,.week-day[data-state=started] .week-dot,.week-day[data-state=partial]::before,.week-day[data-state=partial] .week-dot{background:linear-gradient(90deg,CanvasText 50%,transparent 50%)}
+ .week-day[data-state=submitted]::before,.week-day[data-state=submitted] .week-dot,.week-day[data-state=complete]::before,.week-day[data-state=complete] .week-dot,.journey-route::before{background:CanvasText}
+ .route-stop[data-state=earned] .route-mark{forced-color-adjust:none;background:CanvasText;color:Canvas}
+ .week-day[aria-current=date],.week-day[data-today=true],.route-stop[data-state=next] .route-mark{outline:2px solid Highlight;outline-offset:-2px}
+}
+/* Dias são indicadores, não botões; as sete posições cabem sem rolagem. */
+.week-strip{grid-template-columns:repeat(7,minmax(0,1fr));overflow:visible}
+.week-day{min-width:0}
+.week-day::before{display:block}
+.week-legend{font-size:12px;line-height:1.6}
+.review-answer{width:100%;min-height:88px;padding:12px;border:1px solid var(--field-line);border-radius:var(--r);background:var(--surface);color:var(--ink);font-size:16px}
+.today-aside .error-card h3{font-size:15px;line-height:1.4}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.operation-info{border-left-color:var(--accent)}
+.review-point>summary{font-size:15px;font-weight:600;line-height:1.5}
+.review-point>summary::marker{color:var(--accent)}
+.review-point[open]>summary{margin-bottom:10px}

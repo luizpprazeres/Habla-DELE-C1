@@ -4,6 +4,7 @@
   "main": "src/worker.js",
   "workers_dev": true,
   "preview_urls": false,
+  "triggers": {"crons": ["0 5,13,21 * * *"]},
   "compatibility_date": "2026-10-05",
   "account_id": "d91558d058649c1c431b70cb360c7ddc",
   "assets": {

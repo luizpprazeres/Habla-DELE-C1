@@ -172,7 +172,7 @@ let uploading = false, preparing = false;
  * deps: {api, toast, profile(), today(), appBusy(), hold(root), go(page)}
  */
 export function createExperience(deps) {
- let ctl = null, page = null, root = null, profile = null, gen = 0;
+ let ctl = null, page = null, root = null, profile = null, gen = 0, pickSource = 'gallery';
  const s = {city: null, weather: null, weatherStatus: 'idle', weatherAt: 0, weatherSeq: 0, progress: null, progressStatus: 'idle', progressAt: 0, album: null, albumStatus: 'idle', albumAt: 0, albumSeq: 0, inflight: {progress: false, album: false}};
 
  const alive = g => g === gen && ctl && !ctl.signal.aborted;
@@ -229,17 +229,25 @@ export function createExperience(deps) {
   img.addEventListener('error', fail, {signal: ctl.signal});
   if (img.complete && !img.naturalWidth) fail();
  }
+ // A foto já está no destaque da próxima tarefa: aqui fica só a curiosidade em espanhol.
+ // Hora, tempo, outras curiosidades, referências e crédito completo da foto ficam em "Sobre este lugar".
  function cityPanelHTML(city, next) {
   const facts = city.facts, first = facts[0], rest = facts.slice(1);
   const fact = f => `<div class="city-fact" lang="es">${f.title ? `<strong>${esc(f.title)}</strong>` : ''}<p>${esc(f.text)}</p>${f.sourceUrl ? `<a href="${esc(f.sourceUrl)}" target="_blank" rel="noopener noreferrer" lang="pt-BR">Fonte ↗</a>` : ''}</div>`;
   const ref = (label, r) => r ? `<p class="city-ref-line"><span class="sub">${label}:</span> <span lang="es">${esc(r.name)}</span>${r.url ? ` <a href="${esc(r.url)}" target="_blank" rel="noopener noreferrer">página oficial ↗</a>` : ''}</p>` : '';
-  const p = city.photo, credit = !city.fallback && p.author ? `<p class="photo-credit">Foto: ${esc(p.author)}${p.license ? `, ${p.licenseUrl ? `<a href="${esc(p.licenseUrl)}" target="_blank" rel="noopener noreferrer">${esc(p.license)}</a>` : esc(p.license)}` : ''}${p.sourceUrl ? `. <a href="${esc(p.sourceUrl)}" target="_blank" rel="noopener noreferrer">Wikimedia Commons ↗</a>` : ''}</p>` : '';
+  const p = city.photo;
+  const credit = city.fallback ? '<p class="photo-credit">Paisagem de La Concha: ilustração original do app.</p>'
+   : p.author ? `<p class="photo-credit">Foto${p.title ? ` “${esc(p.title)}”` : ''}: ${esc(p.author)}${p.license && !p.licenseUrl ? `, ${esc(p.license)}` : ''}.</p>${p.licenseUrl || p.sourceUrl ? `<p class="photo-credit credit-links">${p.license && p.licenseUrl ? `<a href="${esc(p.licenseUrl)}" target="_blank" rel="noopener noreferrer">Licença ${esc(p.license)}</a>` : ''}${p.sourceUrl ? `<a href="${esc(p.sourceUrl)}" target="_blank" rel="noopener noreferrer">Original no Wikimedia Commons ↗</a>` : ''}</p>` : ''}`
+   : '<p class="photo-credit">Foto sem crédito informado.</p>';
+  const adapted = !city.fallback && p.adaptation ? `<p class="photo-credit">Adaptações: ${esc(p.adaptation)} No app: recorte, contraste, escurecimento e fade. Versão adaptada sob a mesma licença.</p>` : '';
   const main = city.id === 'donostia';
   return `<div class="xp-city-head"><h2 id="xp-city-title" tabindex="-1" data-xp-focus>Hoje em <span lang="es">${esc(city.name)}</span></h2>${main ? '<span class="tag">Cidade principal da jornada</span>' : next ? `<span class="sub">Donostia volta ${next === 1 ? 'amanhã' : `em ${next} dias`}</span>` : ''}</div>
-  <dl class="city-now"><div><dt>Hora local</dt><dd data-xp-clock>${esc(localTime(city))}</dd></div><div data-xp-weather>${weatherHTML()}</div></dl>
   ${first ? `<h3 class="city-facts-title">Curiosidade em espanhol</h3>${fact(first)}` : ''}
-  ${rest.length || city.church || city.hospital ? `<details class="city-more"><summary>${rest.length ? `Mais ${plural(rest.length, 'curiosidade', 'curiosidades')}` : 'Referências da cidade'}</summary>${rest.map(fact).join('')}${ref('Igreja', city.church)}${ref('Hospital', city.hospital)}</details>` : ''}
-  ${credit}${p.adaptation ? '<p class="photo-credit">Imagem adaptada; detalhes e licença nos créditos.</p>' : ''}<button type="button" class="link-btn" data-xp-go="sources">Fontes e créditos das fotos</button>`;
+  <details class="city-about"><summary>Sobre este lugar</summary>
+   <dl class="city-now"><div><dt>Hora local</dt><dd data-xp-clock>${esc(localTime(city))}</dd></div><div data-xp-weather>${weatherHTML()}</div></dl>
+   ${rest.map(fact).join('')}${ref('Igreja', city.church)}${ref('Hospital', city.hospital)}
+   <div class="city-credit">${credit}${adapted}<button type="button" class="link-btn" data-xp-go="sources">Fontes e créditos das fotos</button></div>
+  </details>`;
  }
  function localTime(city) {
   const now = Date.now();
@@ -251,6 +259,8 @@ export function createExperience(deps) {
   const timer = setInterval(tick, 15000);
   ctl.signal.addEventListener('abort', () => clearInterval(timer), {once: true});
   document.addEventListener('visibilitychange', () => {if (!document.hidden) tick();}, {signal: ctl.signal});
+  // Abrir "Sobre este lugar" mostra a hora já atualizada.
+  panel.querySelector('.city-about')?.addEventListener('toggle', tick, {signal: ctl.signal});
  }
  function weatherHTML() {
   const w = s.weather;
@@ -346,7 +356,9 @@ export function createExperience(deps) {
   const partner = profile === 'luiz' ? 'alana' : 'luiz';
   return `<div class="xp-section-head"><h2 id="album-title" tabindex="-1" data-xp-focus>Álbum a dois</h2><span class="sub" data-xp-storage></span></div>
   <form class="album-form" novalidate>
-   <div class="album-pick"><button type="button" class="secondary" data-xp-pick>Escolher foto</button><input type="file" accept="image/*" hidden data-xp-file aria-label="Escolher foto do aparelho"><p class="sub album-help">A foto é reduzida neste aparelho (até 1600 px, sem localização) e só aparece para vocês dois, dentro do app. Nada é enviado antes de tocar em Compartilhar.</p></div>
+   <div class="album-pick"><div class="album-pick-actions"><button type="button" class="secondary" data-xp-pick="camera">Tirar foto</button><button type="button" class="secondary" data-xp-pick="gallery">Escolher da galeria</button></div>
+    <input type="file" accept="image/*" capture="environment" hidden data-xp-file="camera" aria-label="Tirar foto com a câmera"><input type="file" accept="image/*" hidden data-xp-file="gallery" aria-label="Escolher foto da galeria">
+    <p class="sub album-help">A foto é reduzida neste aparelho (até 1600 px, sem localização) e só aparece para vocês dois, dentro do app. Nada é enviado antes de tocar em Compartilhar. No computador, Tirar foto pode abrir a escolha de arquivos.</p></div>
    <figure class="album-preview" data-xp-preview hidden><img alt="Prévia da foto escolhida"><figcaption class="sub" data-xp-preview-info></figcaption></figure>
    <label for="album-caption">Legenda <span class="sub">(opcional)</span></label>
    <textarea id="album-caption" class="album-caption" maxlength="${UPLOAD.maxCaption}" rows="3" placeholder="Um momento de estudo, um lugar, um incentivo…"></textarea>
@@ -368,11 +380,16 @@ export function createExperience(deps) {
   return photoDrafts.get(profile);
  }
  function bindAlbumForm(album) {
-  const form = album.querySelector('form'), file = form.querySelector('[data-xp-file]'), caption = form.querySelector('textarea'), target = form.querySelector('select');
+  const form = album.querySelector('form'), caption = form.querySelector('textarea'), target = form.querySelector('select');
   const d = draft(), sig = {signal: ctl.signal};
   caption.value = d.caption; target.value = [...target.options].some(o => o.value === d.target) ? d.target : 'both';
-  form.querySelector('[data-xp-pick]').addEventListener('click', () => {if (uploading || preparing) return; file.value = ''; file.click();}, sig);
-  file.addEventListener('change', () => {const chosen = file.files?.[0]; if (chosen) prepare(chosen);}, sig);
+  // Câmera (capture) e galeria (sem capture) seguem a mesma preparação, prévia, compressão e id do rascunho.
+  form.querySelectorAll('[data-xp-pick]').forEach(button => button.addEventListener('click', () => {
+   const file = form.querySelector(`[data-xp-file="${button.dataset.xpPick}"]`);
+   if (!file || uploading || preparing || draft().uncertain) return;
+   pickSource = button.dataset.xpPick; file.value = ''; file.click();
+  }, sig));
+  form.querySelectorAll('[data-xp-file]').forEach(file => file.addEventListener('change', () => {const chosen = file.files?.[0]; if (chosen) {pickSource = file.dataset.xpFile; prepare(chosen);}}, sig));
   // Nunca troca o id ao editar: uma confirmação perdida não pode criar outra cópia.
   const edited = () => {if (!d.uncertain) d.sendFailed = false;};
   caption.addEventListener('input', () => {d.caption = caption.value.slice(0, UPLOAD.maxCaption); edited(); savePhotoText(d); syncForm();}, sig);
@@ -389,14 +406,16 @@ export function createExperience(deps) {
   if (!d.preview) img.removeAttribute('src');
   form.querySelector('[data-xp-preview-info]').textContent = d.blob ? `Pronta para enviar: ${d.width} × ${d.height} px, ${Math.round(d.blob.size / 1000)} KB.` : '';
   form.querySelector('[data-xp-count]').textContent = `${d.caption.length} de ${UPLOAD.maxCaption} caracteres`;
-  const pick = form.querySelector('[data-xp-pick]'), send = form.querySelector('[data-xp-send]');
-  pick.textContent = preparing ? 'Preparando a foto…' : d.blob ? 'Trocar foto' : 'Escolher foto';
+  const send = form.querySelector('[data-xp-send]'), appBusy = deps.appBusy();
+  form.querySelectorAll('[data-xp-pick]').forEach(pick => {
+   const camera = pick.dataset.xpPick === 'camera', active = preparing && pick.dataset.xpPick === pickSource;
+   pick.textContent = active ? 'Preparando a foto…' : camera ? (d.blob ? 'Tirar outra foto' : 'Tirar foto') : (d.blob ? 'Escolher outra da galeria' : 'Escolher da galeria');
+   pick.disabled = preparing || uploading || appBusy || full || d.uncertain;
+   pick.setAttribute('aria-busy', String(active));
+  });
   send.textContent = uploading ? 'Enviando…' : d.sendFailed && d.blob ? 'Tentar enviar de novo' : 'Compartilhar foto';
-  const appBusy = deps.appBusy();
-  pick.disabled = preparing || uploading || appBusy || full || d.uncertain;
   send.disabled = !d.blob || preparing || uploading || appBusy || (full && !d.uncertain);
   form.querySelector('textarea').disabled = form.querySelector('select').disabled = uploading || appBusy || d.uncertain;
-  form.querySelector('[data-xp-pick]').setAttribute('aria-busy', String(preparing));
   send.setAttribute('aria-busy', String(uploading));
   const status = form.querySelector('[data-xp-album-status]');
   const text = statusText ?? (full && !d.uncertain ? `O álbum chegou ao limite (${s.album.storage.maxCount} fotos ou ${mb(s.album.storage.maxBytes)} MB). Novas fotos não cabem por enquanto.` : d.error);
@@ -413,7 +432,7 @@ export function createExperience(deps) {
   } catch (error) {
    d.error = error.message || 'Não foi possível preparar esta foto.';
   } finally {preparing = false;}
-  if (owner === profile && page === 'progress') {syncForm(); slot('album')?.querySelector(d.error ? '[data-xp-pick]' : 'textarea')?.focus();}
+  if (owner === profile && page === 'progress') {syncForm(); slot('album')?.querySelector(d.error ? `[data-xp-pick="${pickSource}"]` : 'textarea')?.focus();}
  }
  async function send() {
   const d = draft(), owner = profile, g = gen;
