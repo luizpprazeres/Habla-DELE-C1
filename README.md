@@ -61,3 +61,9 @@ Caderno de erros por perfil, três revisões curtas com agenda 1/3/7/14 dias, re
 Escuta oferece biblioteca com áudios prontos primeiro e geração personalizada. Reposição agendada limitada pelo teto compartilhado; a biblioteca pode esgotar. Revisores executam em paralelo com os mesmos gates C1. Voz com cache privado e trava por tarefa; fontes maiores que 4096 caracteres divididas em trechos. Migrações 0007–0009 necessárias antes do deploy. Calendário começa a registrar acessos/inícios a partir desta versão; respostas antigas são aproveitadas sem inventar acessos anteriores.
 
 Interface web mais ampla, revisões compactas, informações da cidade recolhidas e câmera/galeria separadas. Capture de câmera precisa ser conferido em aparelho iOS e Android. Detalhes, comparação de estratégias e limitações em [docs/MELHORIAS-2026-10-07.md](docs/MELHORIAS-2026-10-07.md).
+
+### Escrita e revisão compacta
+
+Barra de caracteres espanhóis em respostas, transcrições editáveis e revisões: ¿ ¡ ñ á é í ó ú ü, com maiúsculas opcionais. Insere no cursor/substitui seleção e aciona o rascunho existente. Revisão curta mostra um ponto de cada vez, com card anterior recuado/desfocado, navegação acessível e movimento reduzido. Sem biblioteca de animação nem loop de scroll. Próximo foco fica compacto na lateral do dashboard; texto curto não ocupa um bloco de largura total. Referência visual observada em `https://laudousg.com.br`, seção Calculadoras clínicas.
+
+Verificação: seleção, cursor, desfazer nativo no Chrome, limite de caracteres com aviso, salvamento do rascunho da tarefa, rascunho entre cards e foco após navegação/avaliação conferidos localmente. Layout sem overflow da página em 320/390 px; caracteres rolam dentro da barra mobile. Teste físico de teclado virtual iOS/Android permanece necessário.
